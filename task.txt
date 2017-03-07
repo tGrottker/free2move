@@ -1,0 +1,71 @@
+1. Scheduled non-blocking fetch
+
+
+Create a service (daemon) which fetches data from our endpoint A at x second intervals and cache results in memory (after each fetch clear the existing cache and populate it with new items)
+
+
+Our endpoint:
+GET/ A
+returns a list of items separated by '\n' character
+
+
+Full URL: http://challenge.carjump.net/A
+
+
+Constant x should be configurable in reference.conf or application.conf file.
+
+
+2. HTTP interface
+
+
+Create HTTP interface that allows clients to access the data at a given index
+- use HTTP framework of your choice
+GET /(index)
+return an item at a given index
+
+
+Please provide instructions in README file how to run your server locally.
+
+
+(Bonus) 3. Actors
+
+
+Separate fetching and storage into 2 actors
+
+
+(Bonus) 4. Compression
+
+
+Items returned by endpoint A will contain repeated duplicates at high frequencies. Modify your cache to use Run-length encoding (RLE) compression for internal storage.
+Your compression and decompression should be some concrete implementation of the following trait.
+
+
+trait Compressor {
+def compress[A]: Seq[A] => Seq[Compressed[A]]
+def decompress[A]: Seq[Compressed[A]] => Seq[A]
+}
+
+
+sealed trait Compressed[+A]
+case class Single[A](element: A) extends Compressed[A]
+case class Repeat[A](count: Int, element: A) extends Compressed[A]
+
+
+=======================================================================================================================
+
+
+Constraints
+
+
+- The only accepted language is Scala.
+- There should be no external dependencies except for
+-- testing,
+-- configuration,
+-- or the HTTP interface.
+- Behaviour can be added to provided traits and classes.
+
+
+Delivery
+
+
+Response should be in the form of an sbt project, either uploaded to some git repository or emailed back as .zip file (or tarball). In any case, the code should compile preferably without warnings.
