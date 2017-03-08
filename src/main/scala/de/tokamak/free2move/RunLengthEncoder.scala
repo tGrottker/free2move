@@ -17,5 +17,12 @@ object RunLengthEncoder extends Compressor {
     innerCompress(seq.toList).reverse
   }
 
-  override def decompress[A]: (Seq[Compressed[A]]) => Seq[A] = ???
+  override def decompress[A]: (Seq[Compressed[A]]) => Seq[A] = (seq) => {
+    def innerDecompress(input: List[Compressed[A]], result: List[A] = Nil): List[A] = input match {
+      case Nil => result
+      case Single(element) :: tail => innerDecompress(tail, element :: result)
+      case Repeat(count, element) :: tail => innerDecompress(tail, List.fill(count)(element) ::: result)
+    }
+    innerDecompress(seq.toList).reverse
+  }
 }
