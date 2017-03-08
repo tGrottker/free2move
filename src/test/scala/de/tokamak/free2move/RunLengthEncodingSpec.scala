@@ -4,8 +4,9 @@ import org.specs2._
 
 class RunLengthEncodingSpec extends Specification { def is = s2"""
   A RunLengthEncoder should
-    reduce a collection of the same items to one entry            $encodeSame
-    encode a mixed number of consecutive elements accordingly     $encodeMixed
+    reduce a collection of the same items to one entry                  $encodeSame
+    encode a mixed number of consecutive elements accordingly           $encodeMixed
+    inflate compressed collection of same elements to original size     $decodeSame
   """
 
   private val aStream: Stream[String] = "a" #:: aStream
@@ -15,12 +16,10 @@ class RunLengthEncodingSpec extends Specification { def is = s2"""
   private val mixedElements = sameElements ++ "b" #:: sameElements ++ bStream.take(10)
   private val encodedMixed = Seq(Repeat(20, "a"), Single("b"), Repeat(20, "a"), Repeat(10, "b"))
 
-  def encodeSame = {
-    RunLengthEncoder.compress(sameElements) must_== encodedSame
-  }
+  def encodeSame = RunLengthEncoder.compress(sameElements) must_== encodedSame
 
-  def encodeMixed = {
-    RunLengthEncoder.compress(mixedElements) must_== encodedMixed
-  }
+  def encodeMixed = RunLengthEncoder.compress(mixedElements) must_== encodedMixed
+
+  def decodeSame = RunLengthEncoder.decompress(encodedSame) must_== sameElements
 
 }
