@@ -11,16 +11,16 @@ class RunLengthEncodingSpec extends Specification { def is = s2"""
   private val aStream: Stream[String] = "a" #:: aStream
   private val bStream: Stream[String] = "b" #:: bStream
   private val sameElements = aStream.take(20)
+  private val encodedSame = Seq(Repeat(20, "a"))
   private val mixedElements = sameElements ++ "b" #:: sameElements ++ bStream.take(10)
+  private val encodedMixed = Seq(Repeat(20, "a"), Single("b"), Repeat(20, "a"), Repeat(10, "b"))
 
   def encodeSame = {
-    val encoded = Seq(Repeat(20, "a"))
-    RunLengthEncoder.compress(sameElements) must_== encoded
+    RunLengthEncoder.compress(sameElements) must_== encodedSame
   }
 
   def encodeMixed = {
-    val encoded = Seq(Repeat(20, "a"), Single("b"), Repeat(20, "a"), Repeat(10, "b"))
-    RunLengthEncoder.compress(mixedElements) must_== encoded
+    RunLengthEncoder.compress(mixedElements) must_== encodedMixed
   }
 
 }
