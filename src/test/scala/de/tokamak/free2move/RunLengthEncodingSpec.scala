@@ -15,12 +15,12 @@ class RunLengthEncodingSpec extends Specification { def is = s2"""
 
   def encodeSame = {
     val encoded = Seq(Repeat(20, "a"))
-    RunLengthEncoding.compress(sameElements) must_== encoded
+    RunLengthEncoder.compress(sameElements) must_== encoded
   }
 
   def encodeMixed = {
     val encoded = Seq(Repeat(20, "a"), Single("b"), Repeat(20, "a"), Repeat(10, "b"))
-    RunLengthEncoding.compress(mixedElements) must_== encoded
+    RunLengthEncoder.compress(mixedElements) must_== encoded
   }
 
 }

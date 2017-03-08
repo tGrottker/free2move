@@ -2,7 +2,7 @@ package de.tokamak.free2move
 
 import scala.annotation.tailrec
 
-object RunLengthEncoding extends Compressor {
+object RunLengthEncoder extends Compressor {
   override def compress[A]: (Seq[A]) => Seq[Compressed[A]] = (seq) => {
     @tailrec
     def innerCompress(input: List[A], result: List[Compressed[A]] = Nil): List[Compressed[A]] = input match {
