@@ -36,7 +36,7 @@ class CachingService(private val cache: ActorRef, implicit val timeout: Timeout)
             response
           case Some(s: String) =>
             val response = Response(Status.Ok)
-            response.contentString = s
+            response.contentString = s    // one might append a newline character for better output with curl
             response
         }
         Future.value(res)
