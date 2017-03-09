@@ -4,7 +4,7 @@ import akka.actor.Actor
 
 class Cache extends Actor {
 
-  var content: Seq[String] = Nil
+  private var content: Seq[String] = Nil
 
   override def receive = {
     case newContent(seq) =>
