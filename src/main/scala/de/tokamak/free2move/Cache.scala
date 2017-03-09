@@ -4,12 +4,17 @@ import akka.actor.Actor
 
 class Cache extends Actor {
 
-  var content: Seq[Compressed[String]] = Nil
+  var content: Seq[String] = Nil
 
   override def receive = {
     case newContent(seq) =>
-      content = seq
-    case "content" => println(this.toString)
+      content = RunLengthEncoder.decompress(seq)
+    case index: Int =>
+      if (index >= content.size) {
+        sender ! None
+      } else {
+        sender ! Some(content(index))
+      }
     case message => println(s"Unknown message: $message")
   }
 

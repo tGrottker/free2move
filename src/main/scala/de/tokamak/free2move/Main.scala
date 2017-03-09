@@ -2,11 +2,14 @@ package de.tokamak.free2move
 
 import akka.actor.{ActorSystem, Props}
 import akka.util.Timeout
+import com.twitter.finagle.Http
+import com.twitter.util.Await
+
 import scala.concurrent.duration._
 import com.typesafe.config.ConfigFactory
 
 object Main extends App {
-  implicit val timeout = Timeout(500 millisecond)
+  implicit val timeout = Timeout(1000 millisecond)
   val conf = ConfigFactory.load()
   val interval = conf.getInt("interval")
 
@@ -16,5 +19,7 @@ object Main extends App {
 
   import system.dispatcher
   system.scheduler.schedule(0 milliseconds, interval seconds, fetcher, "fetch")
-  system.scheduler.schedule(3 seconds, interval seconds, cache, "content")
+
+  val service = new CachingService(cache, timeout)
+  Await.ready(Http.serve(":8080", service))
 }
