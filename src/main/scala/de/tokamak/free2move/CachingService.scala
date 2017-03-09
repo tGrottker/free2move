@@ -31,7 +31,7 @@ class CachingService(private val cache: ActorRef, implicit val timeout: Timeout)
         val result = Await.result(cache ? position, timeout.duration)
         val res = result.asInstanceOf[Option[String]] match {
           case None =>
-            val response = Response(Status.InternalServerError)
+            val response = Response(Status.NotFound)
             response.contentString = s"Was not able to find an element at position $position. The index was out of bounds."
             response
           case Some(s: String) =>
@@ -41,6 +41,10 @@ class CachingService(private val cache: ActorRef, implicit val timeout: Timeout)
         }
         Future.value(res)
       }
+    case _ =>
+      val response = Response(Status.Forbidden)
+      response.contentString = "There exists no such path for this method."
+      Future.value(response)
   }
 
 }
